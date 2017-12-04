@@ -6,26 +6,19 @@
 #include "stm32l1xx_tim.h"
 #include "stm32l1xx_usart.h"
 
+#include "hGPIO_LIB.h"
+
 //********************************** Define user constants ************************************
-#define Ain1 GPIO_Pin_1
+#define Ain1 GPIO_Pin_1						// Pin and Channel for transmitter signal
 #define Ain1Channel ADC_Channel_1
+#define Ain2 GPIO_Pin_4						// Pin and channel for receiver signal
+#define Ain2Channel ADC_Channel_2
 #define ADCPort GPIOA
-#define ADCBufferSize 10700
+#define ADCBufferSize 500
 
 #define TriggerMeasurePin GPIO_Pin_10
 #define TriggerMeasurePort GPIOA
 
-//********************************* Define structures for initiliazation **********************
-GPIO_InitTypeDef GPIOPortA;  			// Struct for ADC1 GPIOA Config
-ADC_InitTypeDef ADCInit;				// Struct for ADC Config
-ADC_CommonInitTypeDef ADCSetup;			// Struct for ADC prescaler clock value
-GPIO_InitTypeDef GPIOSetup;
-USART_InitTypeDef USARTSetup;
-DMA_InitTypeDef DMASetup;				// Struct for DMA config
-
-TIM_TimeBaseInitTypeDef TimeBaseSetup; 	// Struct for TimeBase setup
-TIM_ICInitTypeDef InputCaptureSetup;	// Struct for input capture setup
-NVIC_InitTypeDef NVICSetup;				// Struct for NVIC config
 
 char SendStartChar = 'S';
 char SendEndChar = 'E';
@@ -36,15 +29,18 @@ STATE State;
 typedef enum USARTSTATE{Idle, SendBufferStart, SendByte1, SendByte2, SendBufferComplete} USARTSTATE;
 USARTSTATE USARTState;
 
-static uint32_t ADCDataBuffer[ADCBufferSize];		// Array to store data from ADC
+static uint32_t ADCDataBuffer[ADCBufferSize];		// Array to store data from ADC Transmit signal
+static uint32_t ADCDataBuffer2[ADCBufferSize];		// Array to store data from ADC Received signal
 uint32_t GlobalInterruptsDisabled;		// 0 if they are enabled, 1 if they are disabled
 
 void initDMA(void)
 {
+	DMA_InitTypeDef DMASetup;				// Struct for DMA config
 	/*------------------------ DMA1 configuration ------------------------------*/
 
-	/* DMA1 channel1 configuration */
+	/* DMA1 channel1 configuration - transmitted signal*/
 	DMA_DeInit(DMA1_Channel1);								// Reset all registers to default values
+	DMA_DeInit(DMA1_Channel2);
 
 	DMASetup.DMA_PeripheralBaseAddr = (uint32_t)&ADC1->DR;				// Read from which register
 	DMASetup.DMA_MemoryBaseAddr = (uint32_t)&ADCDataBuffer;  // Write to which address
@@ -55,7 +51,7 @@ void initDMA(void)
 
 	DMASetup.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;	// 16 bits
 	DMASetup.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;			// 32 bits
-	DMASetup.DMA_Mode = DMA_Mode_Normal;						// When all conversions are done, start again
+	DMASetup.DMA_Mode = DMA_Mode_Normal;						// When all conversions are done, stop
 	DMASetup.DMA_Priority = DMA_Priority_High;				// High priority of the channel
 	DMASetup.DMA_M2M = DMA_M2M_Disable;						// Disable memory to memory transfer
 
@@ -64,22 +60,35 @@ void initDMA(void)
 
 	/* Enable DMA1 channel1 */
 	DMA_Cmd(DMA1_Channel1, ENABLE);
+
+	/* DMA1 Channel 2 Configuration - to transfer data from ADC channel 2 - received signal*/
+//	DMASetup.DMA_MemoryBaseAddr = (uint32_t)&ADCDataBuffer2; //Write to second buffer
+//	DMA_Init(DMA1_Channel2, &DMASetup);
+//	DMA_SetCurrDataCounter(DMA1_Channel2, ADCBufferSize);
+//
+//	/* Enable DMA1 channel2 */
+//	DMA_Cmd(DMA1_Channel2, ENABLE);
 }
 
 void initADC1(void)
 {
-	GPIO_StructInit(&GPIOPortA);	// Fill the variable with default settings
-	GPIOPortA.GPIO_Pin = Ain1;
-	GPIOPortA.GPIO_Mode = GPIO_Mode_AN;
-	GPIOPortA.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitTypeDef GPIOPortA;
+	ADC_InitTypeDef ADCInit;				// Struct for ADC Config
+	ADC_CommonInitTypeDef ADCSetup;			// Struct for ADC prescaler clock value
+//	GPIO_StructInit(&GPIOPortA);	// Fill the variable with default settings
+//	GPIOPortA.GPIO_Pin = Ain1;
+//	GPIOPortA.GPIO_Mode = GPIO_Mode_AN;
+//	GPIOPortA.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_Init(ADCPort, &GPIOPortA);
+
+	ConfAnalogIn(ADCPort, Ain1);
 
 	ADC_DeInit(ADC1);    // Reset all ADC settings to default
 
-	ADCInit.ADC_Resolution = ADC_Resolution_12b; // Select resolution
-	ADCInit.ADC_ScanConvMode = DISABLE;			// Disable scan mode -> Measure only one input
+	ADCInit.ADC_Resolution = ADC_Resolution_8b; // Select resolution
+	ADCInit.ADC_ScanConvMode = ENABLE;			// Enable Scan mode - scan multiple input channels
 	ADCInit.ADC_ContinuousConvMode = ENABLE;   // Enable continious mode -> measure many times same channel
-	ADCInit.ADC_DataAlign = ADC_DataAlign_Right; // Align the 10bit data to the right
+	ADCInit.ADC_DataAlign = ADC_DataAlign_Right; // Align the data to the right
 	ADCInit.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None; // Don't wait for edge to convert
 	ADCInit.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T2_TRGO; // Trigger from Timer2
 	ADC_Init(ADC1, &ADCInit);					// Initialize the ADC Init struct for ADC1
@@ -95,10 +104,12 @@ void initADC1(void)
 	ADC_Cmd(ADC1, ENABLE);						// Enable the ADC1
 
 
-	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_ADONS) == RESET);  // Wait untill ADC1 is ON -> ADC Flag ADC on
+	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_ADONS) == RESET);  // Wait until ADC1 is ON -> ADC Flag ADC on
 }
 void initUSART(void)
 {
+	GPIO_InitTypeDef GPIOSetup;
+	USART_InitTypeDef USARTSetup;
 // ************** Configure USART2 Tx (PA.02) and USART Rx (PA.3) as alternate function push-pull ****
 	GPIOSetup.GPIO_Pin = GPIO_Pin_2;
 	GPIOSetup.GPIO_Speed = GPIO_Speed_2MHz;
@@ -127,36 +138,45 @@ void initUSART(void)
 void initTriggerMeasure(void)
 {
 //***************************** Init trigger pin ************************************************
-	GPIO_StructInit(&GPIOPortA);		 	  // Fill the variable with default settings
-	GPIOPortA.GPIO_Pin = TriggerMeasurePin;   // Specify pin
-	GPIOPortA.GPIO_Mode = GPIO_Mode_OUT;      //Config output mode
-	GPIOPortA.GPIO_OType = GPIO_OType_PP;	  //Config Push-Pull mode
-	GPIOPortA.GPIO_PuPd = GPIO_PuPd_DOWN;	  // Pull down resistor
-	GPIOPortA.GPIO_Speed = GPIO_Speed_2MHz;   // Low speed
-	GPIO_Init(TriggerMeasurePort, &GPIOPortA);			// Initialize Port A with the settings saved in the structure variable
+//	GPIO_StructInit(&GPIOPortA);		 	  // Fill the variable with default settings
+//	GPIOPortA.GPIO_Pin = TriggerMeasurePin;   // Specify pin
+//	GPIOPortA.GPIO_Mode = GPIO_Mode_OUT;      //Config output mode
+//	GPIOPortA.GPIO_OType = GPIO_OType_PP;	  //Config Push-Pull mode
+//	GPIOPortA.GPIO_PuPd = GPIO_PuPd_DOWN;	  // Pull down resistor
+//	GPIOPortA.GPIO_Speed = GPIO_Speed_2MHz;   // Low speed
+//	GPIO_Init(TriggerMeasurePort, &GPIOPortA);			// Initialize Port A with the settings saved in the structure variable
+
+	ConfDigitalOut(TriggerMeasurePort, TriggerMeasurePin, OutputPP, PullDown, HighSpeed);
 
 //***************************** Init pin for debugging ******************************************
-	GPIO_StructInit(&GPIOPortA);		 	  // Fill the variable with default settings
-	GPIOPortA.GPIO_Pin = GPIO_Pin_8;   			// Specify LED2, PA.5
-	GPIOPortA.GPIO_Mode = GPIO_Mode_OUT;      //Config output mode
-	GPIOPortA.GPIO_OType = GPIO_OType_PP;	  //Config Push-Pull mode
-	GPIOPortA.GPIO_PuPd = GPIO_PuPd_DOWN;	  // Pull down resistor
-	GPIOPortA.GPIO_Speed = GPIO_Speed_2MHz;   // Low speed
-	GPIO_Init(GPIOA, &GPIOPortA);			// Initialize Port A with the settings saved in the structure variable
+//	GPIO_StructInit(&GPIOPortA);		 	  // Fill the variable with default settings
+//	GPIOPortA.GPIO_Pin = GPIO_Pin_8;   			// Specify LED2, PA.5
+//	GPIOPortA.GPIO_Mode = GPIO_Mode_OUT;      //Config output mode
+//	GPIOPortA.GPIO_OType = GPIO_OType_PP;	  //Config Push-Pull mode
+//	GPIOPortA.GPIO_PuPd = GPIO_PuPd_DOWN;	  // Pull down resistor
+//	GPIOPortA.GPIO_Speed = GPIO_Speed_2MHz;   // Low speed
+//	GPIO_Init(GPIOA, &GPIOPortA);			// Initialize Port A with the settings saved in the structure variable
+
+	ConfDigitalOut(GPIOA, GPIO_Pin_8, OutputPP, PullDown, HighSpeed);
 
 
 //**************************** Init button for starting measure
-	GPIO_StructInit(&GPIOPortA);
-	GPIOPortA.GPIO_Pin = USER_BUTTON_PIN;   			// Specify LED2, PA.5
-	GPIOPortA.GPIO_Mode = GPIO_Mode_IN;      //Config output mode
-	GPIOPortA.GPIO_OType = GPIO_OType_PP;	  //Config Push-Pull mode
-	GPIOPortA.GPIO_PuPd = GPIO_PuPd_DOWN;	  // Pull down resistor
-	GPIOPortA.GPIO_Speed = GPIO_Speed_2MHz;   // Low speed
-	GPIO_Init(USER_BUTTON_GPIO_PORT, &GPIOPortA);
+//	GPIO_StructInit(&GPIOPortA);
+//	GPIOPortA.GPIO_Pin = USER_BUTTON_PIN;   			// Specify LED2, PA.5
+//	GPIOPortA.GPIO_Mode = GPIO_Mode_IN;      //Config output mode
+//	GPIOPortA.GPIO_OType = GPIO_OType_PP;	  //Config Push-Pull mode
+//	GPIOPortA.GPIO_PuPd = GPIO_PuPd_DOWN;	  // Pull down resistor
+//	GPIOPortA.GPIO_Speed = GPIO_Speed_2MHz;   // Low speed
+//	GPIO_Init(USER_BUTTON_GPIO_PORT, &GPIOPortA);
+
+	ConfDigitalIn(USER_BUTTON_GPIO_PORT, USER_BUTTON_PIN, PullDown);
 }
 
 void initTimers(void)
 {
+	TIM_TimeBaseInitTypeDef TimeBaseSetup; 	// Struct for TimeBase setup
+	TIM_ICInitTypeDef InputCaptureSetup;	// Struct for input capture setup
+	GPIO_InitTypeDef GPIOPortA;  			// Struct for ADC1 GPIOA Config
 // *************************** Set up Parameters ***************************************
 // *************************** Set up timer triggering *********************************
 	TIM_UpdateRequestConfig(TIM3, TIM_UpdateSource_Regular); // Only underflow/overflow can generate update interrupt
@@ -197,6 +217,7 @@ void initTimers(void)
 
 void initNVIC(void)
 {
+	NVIC_InitTypeDef NVICSetup;				// Struct for NVIC config
 // ****************** Setup the Timer count complete interrupt *****************************
 	NVICSetup.NVIC_IRQChannel = TIM3_IRQn; 		// Enable TIM3 Interrupt
 	NVICSetup.NVIC_IRQChannelPreemptionPriority = 5;
@@ -241,7 +262,7 @@ void SendChar(char Data)
 	while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET);
 }
 
-void SendBufferUSART(void)
+void SendBufferUSART(uint32_t* Buffer)
 {
 	uint16_t CurrentDigit = 0;
 
@@ -256,11 +277,11 @@ void SendBufferUSART(void)
 		switch(USARTState)
 		{
 		case SendByte1:
-			SendChar(ADCDataBuffer[CurrentDigit] & 0x00FF);				// Send lower byte
+			SendChar(Buffer[CurrentDigit] & 0x00FF);				// Send lower byte
 			USARTState = SendByte2;
 			/* no break */
 		case SendByte2:
-			SendChar(ADCDataBuffer[CurrentDigit] & 0xFF00);				// Send upper byte
+			SendChar(Buffer[CurrentDigit] & 0xFF00);				// Send upper byte
 			CurrentDigit++;
 			USARTState = SendByte1;
 			break;
@@ -283,12 +304,14 @@ void Delay_ms(uint32_t nTime)
 	while(TimingDelay != 0);
 }
 
-void ClearADCDataBuffer (void)
+
+void ClearBuffer (uint32_t Buffer[])
 {
 	int index = 0;
-	for(index = 0; index<= ADCBufferSize; index++)
+	uint16_t SizeOfBuffer = sizeof(Buffer)/sizeof(Buffer[0]);
+	for(index = 0; index<= sizeof SizeOfBuffer; index++)
 	{
-		ADCDataBuffer[index] = 0;
+		Buffer[index] = 0;
 	}
 }
 
@@ -346,8 +369,8 @@ int main(void)
 			ResetDMA();
 			State = SendingStarted;
 			USARTState = SendBufferStart;
-			SendBufferUSART();
-			ClearADCDataBuffer();
+			SendBufferUSART(ADCDataBuffer);
+			ClearBuffer(ADCDataBuffer);
 			readingCycles++;
 		}
 
