@@ -62,12 +62,12 @@ void initDMA(void)
 	DMA_Cmd(DMA1_Channel1, ENABLE);
 
 	/* DMA1 Channel 2 Configuration - to transfer data from ADC channel 2 - received signal*/
-//	DMASetup.DMA_MemoryBaseAddr = (uint32_t)&ADCDataBuffer2; //Write to second buffer
-//	DMA_Init(DMA1_Channel2, &DMASetup);
-//	DMA_SetCurrDataCounter(DMA1_Channel2, ADCBufferSize);
-//
-//	/* Enable DMA1 channel2 */
-//	DMA_Cmd(DMA1_Channel2, ENABLE);
+	DMASetup.DMA_MemoryBaseAddr = (uint32_t)&ADCDataBuffer2; //Write to second buffer
+	DMA_Init(DMA1_Channel2, &DMASetup);
+	DMA_SetCurrDataCounter(DMA1_Channel2, ADCBufferSize);
+
+	/* Enable DMA1 channel2 */
+	DMA_Cmd(DMA1_Channel2, ENABLE);
 }
 
 void initADC1(void)
@@ -79,7 +79,7 @@ void initADC1(void)
 //	GPIOPortA.GPIO_Pin = Ain1;
 //	GPIOPortA.GPIO_Mode = GPIO_Mode_AN;
 //	GPIOPortA.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(ADCPort, &GPIOPortA);
+//	GPIO_Init(ADCPort, &GPIOPortA);
 
 	ConfAnalogIn(ADCPort, Ain1);
 
