@@ -11,12 +11,12 @@
 uint8_t PinToAFSource(uint16_t PIN)
 {
 	uint8_t PinSource = 0;
-	while(PIN != 1)
+	while(PIN != 0)
 	{
 		PIN >>= 1;
 		PinSource++;
 	}
-	return PinSource;
+	return (PinSource-1);
 }
 
 void AnalogIn(GPIO_TypeDef* PORT, uint16_t PIN)
