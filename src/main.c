@@ -12,9 +12,11 @@
 #define Ain1 GPIO_Pin_1						// Pin and Channel for transmitter signal
 #define Ain1Channel ADC_Channel_1
 #define Ain2 GPIO_Pin_4						// Pin and channel for receiver signal
-#define Ain2Channel ADC_Channel_2
+#define Ain2Channel ADC_Channel_4
 #define ADCPort GPIOA
-#define ADCBufferSize 500
+
+#define ADCBufferSize 500					// Buffer size in samples
+#define MeasureTime 5000					// Measure time in us
 
 #define TriggerMeasurePin GPIO_Pin_10
 #define TriggerMeasurePort GPIOA
@@ -30,7 +32,6 @@ typedef enum USARTSTATE{Idle, SendBufferStart, SendByte1, SendByte2, SendBufferC
 USARTSTATE USARTState;
 
 static uint32_t ADCDataBuffer[ADCBufferSize];		// Array to store data from ADC Transmit signal
-static uint32_t ADCDataBuffer2[ADCBufferSize];		// Array to store data from ADC Received signal
 uint32_t GlobalInterruptsDisabled;		// 0 if they are enabled, 1 if they are disabled
 
 void initDMA(void)
@@ -40,7 +41,6 @@ void initDMA(void)
 
 	/* DMA1 channel1 configuration - transmitted signal*/
 	DMA_DeInit(DMA1_Channel1);								// Reset all registers to default values
-	DMA_DeInit(DMA1_Channel2);
 
 	DMASetup.DMA_PeripheralBaseAddr = (uint32_t)&ADC1->DR;				// Read from which register
 	DMASetup.DMA_MemoryBaseAddr = (uint32_t)&ADCDataBuffer;  // Write to which address
@@ -60,37 +60,25 @@ void initDMA(void)
 
 	/* Enable DMA1 channel1 */
 	DMA_Cmd(DMA1_Channel1, ENABLE);
-
-	/* DMA1 Channel 2 Configuration - to transfer data from ADC channel 2 - received signal*/
-	DMASetup.DMA_MemoryBaseAddr = (uint32_t)&ADCDataBuffer2; //Write to second buffer
-	DMA_Init(DMA1_Channel2, &DMASetup);
-	DMA_SetCurrDataCounter(DMA1_Channel2, ADCBufferSize);
-
-	/* Enable DMA1 channel2 */
-	DMA_Cmd(DMA1_Channel2, ENABLE);
 }
 
 void initADC1(void)
 {
-	GPIO_InitTypeDef GPIOPortA;
 	ADC_InitTypeDef ADCInit;				// Struct for ADC Config
 	ADC_CommonInitTypeDef ADCSetup;			// Struct for ADC prescaler clock value
-//	GPIO_StructInit(&GPIOPortA);	// Fill the variable with default settings
-//	GPIOPortA.GPIO_Pin = Ain1;
-//	GPIOPortA.GPIO_Mode = GPIO_Mode_AN;
-//	GPIOPortA.GPIO_PuPd = GPIO_PuPd_NOPULL;
-//	GPIO_Init(ADCPort, &GPIOPortA);
 
-	ConfAnalogIn(ADCPort, Ain1);
+	AnalogIn(ADCPort, Ain1);
+	AnalogIn(ADCPort, Ain2);
 
 	ADC_DeInit(ADC1);    // Reset all ADC settings to default
 
-	ADCInit.ADC_Resolution = ADC_Resolution_8b; // Select resolution
+	ADCInit.ADC_Resolution = ADC_Resolution_10b; // Select resolution
 	ADCInit.ADC_ScanConvMode = ENABLE;			// Enable Scan mode - scan multiple input channels
 	ADCInit.ADC_ContinuousConvMode = ENABLE;   // Enable continious mode -> measure many times same channel
 	ADCInit.ADC_DataAlign = ADC_DataAlign_Right; // Align the data to the right
 	ADCInit.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None; // Don't wait for edge to convert
 	ADCInit.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T2_TRGO; // Trigger from Timer2
+	ADCInit.ADC_NbrOfConversion = 2;							// Number of channels to be scanned
 	ADC_Init(ADC1, &ADCInit);					// Initialize the ADC Init struct for ADC1
 
 	ADCSetup.ADC_Prescaler = ADC_Prescaler_Div1; //Divide the HSI by 1 -> 16 Mhz (1 ADC cycle = )
@@ -110,7 +98,7 @@ void initUSART(void)
 {
 	GPIO_InitTypeDef GPIOSetup;
 	USART_InitTypeDef USARTSetup;
-// ************** Configure USART2 Tx (PA.02) and USART Rx (PA.3) as alternate function push-pull ****
+/*// ************** Configure USART2 Tx (PA.02) and USART Rx (PA.3) as alternate function push-pull ****
 	GPIOSetup.GPIO_Pin = GPIO_Pin_2;
 	GPIOSetup.GPIO_Speed = GPIO_Speed_2MHz;
 	GPIOSetup.GPIO_Mode = GPIO_Mode_AF;
@@ -119,7 +107,9 @@ void initUSART(void)
 	GPIO_Init(GPIOA, &GPIOSetup);
 
 // ***************************** Map USART2 to PA.2 and PA.3 ******************************
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2);
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2);*/
+
+	AltFunc1(GPIOA, GPIO_Pin_2, GPIO_AF_USART2);
 
 // ***************************** Initialize USART2 *****************************************
 	USARTSetup.USART_BaudRate = 38400;
@@ -138,45 +128,19 @@ void initUSART(void)
 void initTriggerMeasure(void)
 {
 //***************************** Init trigger pin ************************************************
-//	GPIO_StructInit(&GPIOPortA);		 	  // Fill the variable with default settings
-//	GPIOPortA.GPIO_Pin = TriggerMeasurePin;   // Specify pin
-//	GPIOPortA.GPIO_Mode = GPIO_Mode_OUT;      //Config output mode
-//	GPIOPortA.GPIO_OType = GPIO_OType_PP;	  //Config Push-Pull mode
-//	GPIOPortA.GPIO_PuPd = GPIO_PuPd_DOWN;	  // Pull down resistor
-//	GPIOPortA.GPIO_Speed = GPIO_Speed_2MHz;   // Low speed
-//	GPIO_Init(TriggerMeasurePort, &GPIOPortA);			// Initialize Port A with the settings saved in the structure variable
-
-	ConfDigitalOut(TriggerMeasurePort, TriggerMeasurePin, OutputPP, PullDown, HighSpeed);
+	DigitalOut(TriggerMeasurePort, TriggerMeasurePin, OutputPP, PullDown, HighSpeed);
 
 //***************************** Init pin for debugging ******************************************
-//	GPIO_StructInit(&GPIOPortA);		 	  // Fill the variable with default settings
-//	GPIOPortA.GPIO_Pin = GPIO_Pin_8;   			// Specify LED2, PA.5
-//	GPIOPortA.GPIO_Mode = GPIO_Mode_OUT;      //Config output mode
-//	GPIOPortA.GPIO_OType = GPIO_OType_PP;	  //Config Push-Pull mode
-//	GPIOPortA.GPIO_PuPd = GPIO_PuPd_DOWN;	  // Pull down resistor
-//	GPIOPortA.GPIO_Speed = GPIO_Speed_2MHz;   // Low speed
-//	GPIO_Init(GPIOA, &GPIOPortA);			// Initialize Port A with the settings saved in the structure variable
-
-	ConfDigitalOut(GPIOA, GPIO_Pin_8, OutputPP, PullDown, HighSpeed);
-
+	DigitalOut(GPIOA, GPIO_Pin_8, OutputPP, PullDown, HighSpeed);
 
 //**************************** Init button for starting measure
-//	GPIO_StructInit(&GPIOPortA);
-//	GPIOPortA.GPIO_Pin = USER_BUTTON_PIN;   			// Specify LED2, PA.5
-//	GPIOPortA.GPIO_Mode = GPIO_Mode_IN;      //Config output mode
-//	GPIOPortA.GPIO_OType = GPIO_OType_PP;	  //Config Push-Pull mode
-//	GPIOPortA.GPIO_PuPd = GPIO_PuPd_DOWN;	  // Pull down resistor
-//	GPIOPortA.GPIO_Speed = GPIO_Speed_2MHz;   // Low speed
-//	GPIO_Init(USER_BUTTON_GPIO_PORT, &GPIOPortA);
-
-	ConfDigitalIn(USER_BUTTON_GPIO_PORT, USER_BUTTON_PIN, PullDown);
+	DigitalIn(USER_BUTTON_GPIO_PORT, USER_BUTTON_PIN, PullDown);
 }
 
 void initTimers(void)
 {
 	TIM_TimeBaseInitTypeDef TimeBaseSetup; 	// Struct for TimeBase setup
 	TIM_ICInitTypeDef InputCaptureSetup;	// Struct for input capture setup
-	GPIO_InitTypeDef GPIOPortA;  			// Struct for ADC1 GPIOA Config
 // *************************** Set up Parameters ***************************************
 // *************************** Set up timer triggering *********************************
 	TIM_UpdateRequestConfig(TIM3, TIM_UpdateSource_Regular); // Only underflow/overflow can generate update interrupt
@@ -192,7 +156,7 @@ void initTimers(void)
 	TimeBaseSetup.TIM_Prescaler = 32;					// Divide system core freq 32 times 32Mhz -> 1Mhz
 	TimeBaseSetup.TIM_ClockDivision = TIM_CKD_DIV1;		// No further division of the freq
 	TimeBaseSetup.TIM_CounterMode = TIM_CounterMode_Down; // Counting up
-	TimeBaseSetup.TIM_Period = 10000;		// 10 000 us = 10ms measuring time
+	TimeBaseSetup.TIM_Period = MeasureTime;		// 10 000 us = 10ms measuring time
 	TIM_TimeBaseInit(TIM3, &TimeBaseSetup);
 
 // *************************** Set up input capture *************************************
@@ -203,13 +167,15 @@ void initTimers(void)
 	InputCaptureSetup.TIM_ICSelection = TIM_ICSelection_DirectTI;
 	TIM_ICInit(TIM3, &InputCaptureSetup);
 
-	GPIOPortA.GPIO_Pin = GPIO_Pin_6;
-	GPIOPortA.GPIO_Mode = GPIO_Mode_AF;
-	GPIOPortA.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIOPortA.GPIO_OType = GPIO_OType_PP;
-	GPIOPortA.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(GPIOA, &GPIOPortA);
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource6, GPIO_AF_TIM3);
+//	GPIOPortA.GPIO_Pin = GPIO_Pin_6;
+//	GPIOPortA.GPIO_Mode = GPIO_Mode_AF;
+//	GPIOPortA.GPIO_Speed = GPIO_Speed_2MHz;
+//	GPIOPortA.GPIO_OType = GPIO_OType_PP;
+//	GPIOPortA.GPIO_PuPd = GPIO_PuPd_NOPULL;
+//	GPIO_Init(GPIOA, &GPIOPortA);
+//	GPIO_PinAFConfig(GPIOA, GPIO_PinSource6, GPIO_AF_TIM3);
+
+	AltFunc2(GPIOA, GPIO_Pin_6, GPIO_AF_TIM3, OutputPP, PullUp, HighSpeed);
 
 // Configure interrupt on reaching target cycles (10ms)
 	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
@@ -305,7 +271,7 @@ void Delay_ms(uint32_t nTime)
 }
 
 
-void ClearBuffer (uint32_t Buffer[])
+void ClearBuffer (uint32_t* Buffer)
 {
 	int index = 0;
 	uint16_t SizeOfBuffer = sizeof(Buffer)/sizeof(Buffer[0]);
@@ -350,12 +316,16 @@ void TriggerMeasure()
 
 void CheckAndDisableInterrupts(void) { GlobalInterruptsDisabled = __get_PRIMASK();__disable_irq(); }
 void CheckAndEnableInterrupts(void) { if(!GlobalInterruptsDisabled) __enable_irq(); }
+void ResetMeasure() { ResetADC1(); ResetDMA(); ClearBuffer(&ADCDataBuffer);}
+void SendDataToPC() { State = SendingStarted; USARTState = SendBufferStart; SendBufferUSART(ADCDataBuffer);
+					  ClearBuffer(ADCDataBuffer); }
 int main(void)
 {
 //	CheckAndDisableInterrupts();
 	uint32_t readingCycles = 0;
 	Init();
-	ADC_RegularChannelConfig(ADC1, Ain1Channel , 1, ADC_SampleTime_4Cycles); //Configure the channel (PA.1, to be read)
+	ADC_RegularChannelConfig(ADC1, Ain1Channel , 1, ADC_SampleTime_4Cycles); //Configure the channel to be read
+	ADC_RegularChannelConfig(ADC1, Ain2Channel , 2, ADC_SampleTime_4Cycles);
 //	CheckAndEnableInterrupts();
 	while(1)
 	{
@@ -365,12 +335,8 @@ int main(void)
 		Delay_ms(50); // while(State != MeasureEnded)
 		if (State == MeasureEnded)
 		{
-			ResetADC1();
-			ResetDMA();
-			State = SendingStarted;
-			USARTState = SendBufferStart;
-			SendBufferUSART(ADCDataBuffer);
-			ClearBuffer(ADCDataBuffer);
+			ResetMeasure();
+			SendDataToPC();
 			readingCycles++;
 		}
 

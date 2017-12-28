@@ -24,9 +24,15 @@
 #define OutputPP GPIO_OType_PP
 #define OutputOD GPIO_OType_OD
 
-void ConfAnalogIn(GPIO_TypeDef* PORT, uint16_t PIN);
-void ConfDigitalOut(GPIO_TypeDef* PORT, uint16_t PIN, GPIOOType_TypeDef PushOrDrain,
+
+uint8_t PinToAFSource(uint16_t PIN);
+void AnalogIn(GPIO_TypeDef* PORT, uint16_t PIN);
+void DigitalOut(GPIO_TypeDef* PORT, uint16_t PIN, GPIOOType_TypeDef PushOrDrain,
 										GPIOPuPd_TypeDef PULL, GPIOSpeed_TypeDef SPEED);
-void ConfDigitalIn(GPIO_TypeDef* PORT, uint16_t PIN, GPIOPuPd_TypeDef PULL);
+void DigitalIn(GPIO_TypeDef* PORT, uint16_t PIN, GPIOPuPd_TypeDef PULL);
+
+void AltFunc1(GPIO_TypeDef* PORT, uint16_t PIN, uint8_t FUNCTION);
+void AltFunc2(GPIO_TypeDef* PORT, uint16_t PIN, uint8_t FUNCTION, GPIOOType_TypeDef PushOrDrain,
+										GPIOPuPd_TypeDef PULL, GPIOSpeed_TypeDef SPEED);
 
 #endif /* HGPIO_LIB_H_ */
