@@ -1457,54 +1457,54 @@ LOAD g:/porgrams/stm32 system workbench/plugins/fr.ac6.mcu.externaltools.arm-non
                 0x080004e4       0x4c src/main.o
                 0x080004e4                initUSART
  .text.initTriggerMeasure
-                0x08000530       0x44 src/main.o
+                0x08000530       0x50 src/main.o
                 0x08000530                initTriggerMeasure
  .text.initTimers
-                0x08000574       0x98 src/main.o
-                0x08000574                initTimers
+                0x08000580       0x98 src/main.o
+                0x08000580                initTimers
  .text.initNVIC
-                0x0800060c       0x28 src/main.o
-                0x0800060c                initNVIC
- .text.Init     0x08000634       0x80 src/main.o
-                0x08000634                Init
+                0x08000618       0x28 src/main.o
+                0x08000618                initNVIC
+ .text.Init     0x08000640       0x80 src/main.o
+                0x08000640                Init
  .text.SendChar
-                0x080006b4       0x34 src/main.o
-                0x080006b4                SendChar
+                0x080006c0       0x34 src/main.o
+                0x080006c0                SendChar
  .text.SendBufferUSART
-                0x080006e8       0xb4 src/main.o
-                0x080006e8                SendBufferUSART
+                0x080006f4       0xb4 src/main.o
+                0x080006f4                SendBufferUSART
  .text.Delay_ms
-                0x0800079c       0x28 src/main.o
-                0x0800079c                Delay_ms
+                0x080007a8       0x28 src/main.o
+                0x080007a8                Delay_ms
  .text.ClearBuffer
-                0x080007c4       0x38 src/main.o
-                0x080007c4                ClearBuffer
+                0x080007d0       0x38 src/main.o
+                0x080007d0                ClearBuffer
  .text.StopADCMeasure
-                0x080007fc       0x2c src/main.o
-                0x080007fc                StopADCMeasure
+                0x08000808       0x2c src/main.o
+                0x08000808                StopADCMeasure
  .text.ResetADC1
-                0x08000828       0x44 src/main.o
-                0x08000828                ResetADC1
+                0x08000834       0x44 src/main.o
+                0x08000834                ResetADC1
  .text.ResetDMA
-                0x0800086c       0x2c src/main.o
-                0x0800086c                ResetDMA
+                0x08000878       0x2c src/main.o
+                0x08000878                ResetDMA
  .text.TriggerMeasure
-                0x08000898       0x3c src/main.o
-                0x08000898                TriggerMeasure
+                0x080008a4       0x2c src/main.o
+                0x080008a4                TriggerMeasure
  .text.ResetMeasure
-                0x080008d4       0x1c src/main.o
-                0x080008d4                ResetMeasure
+                0x080008d0       0x10 src/main.o
+                0x080008d0                ResetMeasure
  .text.SendDataToPC
-                0x080008f0       0x2c src/main.o
-                0x080008f0                SendDataToPC
- .text.main     0x0800091c       0x74 src/main.o
-                0x0800091c                main
+                0x080008e0       0x30 src/main.o
+                0x080008e0                SendDataToPC
+ .text.main     0x08000910       0x74 src/main.o
+                0x08000910                main
  .text.SysTick_Handler
-                0x08000990       0x24 src/main.o
-                0x08000990                SysTick_Handler
+                0x08000984       0x24 src/main.o
+                0x08000984                SysTick_Handler
  .text.TIM3_IRQHandler
-                0x080009b4       0x3c src/main.o
-                0x080009b4                TIM3_IRQHandler
+                0x080009a8       0x48 src/main.o
+                0x080009a8                TIM3_IRQHandler
  .text.SystemInit
                 0x080009f0       0x68 src/system_stm32l1xx.o
                 0x080009f0                SystemInit
@@ -1987,7 +1987,7 @@ OUTPUT(UltrasonicCorrelationMeasure.elf elf32-littlearm)
  .debug_ranges  0x000004e8      0x2a8 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_tim.o)
  .debug_ranges  0x00000790       0xf0 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
 
-.debug_macro    0x00000000     0xf82e
+.debug_macro    0x00000000     0xf834
  .debug_macro   0x00000000      0x1b0 src/hGPIO_LIB.o
  .debug_macro   0x000001b0      0x892 src/hGPIO_LIB.o
  .debug_macro   0x00000a42       0x70 src/hGPIO_LIB.o
@@ -2027,63 +2027,63 @@ OUTPUT(UltrasonicCorrelationMeasure.elf elf32-littlearm)
  .debug_macro   0x0000c67c       0x88 src/hGPIO_LIB.o
  .debug_macro   0x0000c704       0x35 src/hGPIO_LIB.o
  .debug_macro   0x0000c739       0x40 src/hGPIO_LIB.o
- .debug_macro   0x0000c779      0x1ff src/main.o
- .debug_macro   0x0000c978      0x157 src/main.o
- .debug_macro   0x0000cacf      0x1af src/system_stm32l1xx.o
- .debug_macro   0x0000cc7e      0x1b3 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
- .debug_macro   0x0000ce31      0x88c G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
- .debug_macro   0x0000d6bd       0x82 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
- .debug_macro   0x0000d73f      0x247 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_adc.o)
- .debug_macro   0x0000d986       0xae G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_adc.o)
- .debug_macro   0x0000da34      0x1b3 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dbgmcu.o)
- .debug_macro   0x0000dbe7       0x7c G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dbgmcu.o)
- .debug_macro   0x0000dc63      0x205 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dma.o)
- .debug_macro   0x0000de68      0x3a8 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dma.o)
- .debug_macro   0x0000e210      0x1b1 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_gpio.o)
- .debug_macro   0x0000e3c1      0x1fd G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_gpio.o)
- .debug_macro   0x0000e5be      0x253 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_rcc.o)
- .debug_macro   0x0000e811      0x40d G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_rcc.o)
- .debug_macro   0x0000ec1e      0x1c4 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_tim.o)
- .debug_macro   0x0000ede2      0x669 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_tim.o)
- .debug_macro   0x0000f44b      0x1c9 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
- .debug_macro   0x0000f614      0x21a G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
+ .debug_macro   0x0000c779      0x205 src/main.o
+ .debug_macro   0x0000c97e      0x157 src/main.o
+ .debug_macro   0x0000cad5      0x1af src/system_stm32l1xx.o
+ .debug_macro   0x0000cc84      0x1b3 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
+ .debug_macro   0x0000ce37      0x88c G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
+ .debug_macro   0x0000d6c3       0x82 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
+ .debug_macro   0x0000d745      0x247 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_adc.o)
+ .debug_macro   0x0000d98c       0xae G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_adc.o)
+ .debug_macro   0x0000da3a      0x1b3 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dbgmcu.o)
+ .debug_macro   0x0000dbed       0x7c G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dbgmcu.o)
+ .debug_macro   0x0000dc69      0x205 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dma.o)
+ .debug_macro   0x0000de6e      0x3a8 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dma.o)
+ .debug_macro   0x0000e216      0x1b1 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_gpio.o)
+ .debug_macro   0x0000e3c7      0x1fd G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_gpio.o)
+ .debug_macro   0x0000e5c4      0x253 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_rcc.o)
+ .debug_macro   0x0000e817      0x40d G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_rcc.o)
+ .debug_macro   0x0000ec24      0x1c4 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_tim.o)
+ .debug_macro   0x0000ede8      0x669 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_tim.o)
+ .debug_macro   0x0000f451      0x1c9 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
+ .debug_macro   0x0000f61a      0x21a G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
 
-.debug_line     0x00000000     0x60f1
+.debug_line     0x00000000     0x60ee
  .debug_line    0x00000000      0x742 src/hGPIO_LIB.o
- .debug_line    0x00000742      0xa06 src/main.o
- .debug_line    0x00001148      0x6ef src/system_stm32l1xx.o
- .debug_line    0x00001837       0x7e startup/startup_stm32l1xx_xl.o
- .debug_line    0x000018b5      0x6d2 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
- .debug_line    0x00001f87      0xa19 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_adc.o)
- .debug_line    0x000029a0      0x6cf G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dbgmcu.o)
- .debug_line    0x0000306f      0x7be G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dma.o)
- .debug_line    0x0000382d      0x7eb G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_gpio.o)
- .debug_line    0x00004018      0x9a8 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_rcc.o)
- .debug_line    0x000049c0      0xe10 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_tim.o)
- .debug_line    0x000057d0      0x921 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
+ .debug_line    0x00000742      0xa03 src/main.o
+ .debug_line    0x00001145      0x6ef src/system_stm32l1xx.o
+ .debug_line    0x00001834       0x7e startup/startup_stm32l1xx_xl.o
+ .debug_line    0x000018b2      0x6d2 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
+ .debug_line    0x00001f84      0xa19 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_adc.o)
+ .debug_line    0x0000299d      0x6cf G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dbgmcu.o)
+ .debug_line    0x0000306c      0x7be G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dma.o)
+ .debug_line    0x0000382a      0x7eb G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_gpio.o)
+ .debug_line    0x00004015      0x9a8 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_rcc.o)
+ .debug_line    0x000049bd      0xe10 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_tim.o)
+ .debug_line    0x000057cd      0x921 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
 
-.debug_str      0x00000000    0x552d0
+.debug_str      0x00000000    0x552fa
  .debug_str     0x00000000    0x51698 src/hGPIO_LIB.o
                               0x518be (size before relaxing)
- .debug_str     0x00051698     0x120d src/main.o
-                              0x52a8b (size before relaxing)
- .debug_str     0x000528a5      0x177 src/system_stm32l1xx.o
+ .debug_str     0x00051698     0x1237 src/main.o
+                              0x52ab5 (size before relaxing)
+ .debug_str     0x000528cf      0x177 src/system_stm32l1xx.o
                               0x51791 (size before relaxing)
- .debug_str     0x00052a1c      0x175 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
+ .debug_str     0x00052a46      0x175 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
                               0x51804 (size before relaxing)
- .debug_str     0x00052b91      0x841 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_adc.o)
+ .debug_str     0x00052bbb      0x841 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_adc.o)
                               0x51f50 (size before relaxing)
- .debug_str     0x000533d2       0xe4 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dbgmcu.o)
+ .debug_str     0x000533fc       0xe4 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dbgmcu.o)
                               0x51675 (size before relaxing)
- .debug_str     0x000534b6      0x5f9 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dma.o)
+ .debug_str     0x000534e0      0x5f9 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dma.o)
                               0x51ca6 (size before relaxing)
- .debug_str     0x00053aaf      0x170 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_gpio.o)
+ .debug_str     0x00053ad9      0x170 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_gpio.o)
                               0x518de (size before relaxing)
- .debug_str     0x00053c1f      0x8f8 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_rcc.o)
+ .debug_str     0x00053c49      0x8f8 G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_rcc.o)
                               0x51fb4 (size before relaxing)
- .debug_str     0x00054517      0x90c G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_tim.o)
+ .debug_str     0x00054541      0x90c G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_tim.o)
                               0x520b1 (size before relaxing)
- .debug_str     0x00054e23      0x4ad G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
+ .debug_str     0x00054e4d      0x4ad G:\Documents and stuff\Project Avalanche\Workspace 4\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
                               0x51bbf (size before relaxing)
 
 .comment        0x00000000       0x6e

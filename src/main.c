@@ -20,10 +20,12 @@
 
 #define TriggerMeasurePin GPIO_Pin_10
 #define TriggerMeasurePort GPIOA
-
-
 char SendStartChar = 'S';
 char SendEndChar = 'E';
+//********************************* Define Macros ********************************************
+#define SIZEARRAY(x)  (sizeof(x) / sizeof((x)[0]))
+
+
 
 typedef enum STATE {ReadyToMeasure, MeasureStarted, MeasureEnded, SendingStarted, SendingEnded} STATE;
 STATE State;
@@ -128,7 +130,8 @@ void initUSART(void)
 void initTriggerMeasure(void)
 {
 //***************************** Init trigger pin ************************************************
-	DigitalOut(TriggerMeasurePort, TriggerMeasurePin, OutputPP, PullDown, HighSpeed);
+	DigitalOut(TriggerMeasurePort, TriggerMeasurePin, OutputPP, PullUp, HighSpeed);
+	GPIO_SetBits(TriggerMeasurePort, TriggerMeasurePin);
 
 //***************************** Init pin for debugging ******************************************
 	DigitalOut(GPIOA, GPIO_Pin_8, OutputPP, PullDown, HighSpeed);
@@ -142,6 +145,15 @@ void initTimers(void)
 	TIM_TimeBaseInitTypeDef TimeBaseSetup; 	// Struct for TimeBase setup
 	TIM_ICInitTypeDef InputCaptureSetup;	// Struct for input capture setup
 // *************************** Set up Parameters ***************************************
+// *************************** Set up input capture *************************************
+	InputCaptureSetup.TIM_Channel = TIM_Channel_1;
+	InputCaptureSetup.TIM_ICPrescaler = TIM_CKD_DIV1;
+	InputCaptureSetup.TIM_ICFilter = 2;
+	InputCaptureSetup.TIM_ICPolarity = TIM_ICPolarity_Falling;
+	InputCaptureSetup.TIM_ICSelection = TIM_ICSelection_DirectTI;
+	TIM_ICInit(TIM3, &InputCaptureSetup);
+
+	AltFunc2(GPIOA, GPIO_Pin_6, GPIO_AF_TIM3, OutputPP, PullUp, HighSpeed);
 // *************************** Set up timer triggering *********************************
 	TIM_UpdateRequestConfig(TIM3, TIM_UpdateSource_Regular); // Only underflow/overflow can generate update interrupt
 	TIM_SelectOutputTrigger(TIM3, TIM_TRGOSource_Update); // TRGO event only from update event
@@ -159,25 +171,9 @@ void initTimers(void)
 	TimeBaseSetup.TIM_Period = MeasureTime;		// 10 000 us = 10ms measuring time
 	TIM_TimeBaseInit(TIM3, &TimeBaseSetup);
 
-// *************************** Set up input capture *************************************
-	InputCaptureSetup.TIM_Channel = TIM_Channel_1;
-	InputCaptureSetup.TIM_ICPrescaler = TIM_CKD_DIV1;
-	InputCaptureSetup.TIM_ICFilter = 2;
-	InputCaptureSetup.TIM_ICPolarity = TIM_ICPolarity_Rising;
-	InputCaptureSetup.TIM_ICSelection = TIM_ICSelection_DirectTI;
-	TIM_ICInit(TIM3, &InputCaptureSetup);
 
-//	GPIOPortA.GPIO_Pin = GPIO_Pin_6;
-//	GPIOPortA.GPIO_Mode = GPIO_Mode_AF;
-//	GPIOPortA.GPIO_Speed = GPIO_Speed_2MHz;
-//	GPIOPortA.GPIO_OType = GPIO_OType_PP;
-//	GPIOPortA.GPIO_PuPd = GPIO_PuPd_NOPULL;
-//	GPIO_Init(GPIOA, &GPIOPortA);
-//	GPIO_PinAFConfig(GPIOA, GPIO_PinSource6, GPIO_AF_TIM3);
 
-	AltFunc2(GPIOA, GPIO_Pin_6, GPIO_AF_TIM3, OutputPP, PullUp, HighSpeed);
-
-// Configure interrupt on reaching target cycles (10ms)
+// Configure interrupt on reaching target cycles
 	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
 }
 
@@ -270,12 +266,11 @@ void Delay_ms(uint32_t nTime)
 	while(TimingDelay != 0);
 }
 
-
-void ClearBuffer (uint32_t* Buffer)
+// Always use with defined macro - SIZEOFARRAY(x) as a second argument
+void ClearBuffer (uint32_t* Buffer, int SizeOfBuffer)
 {
 	int index = 0;
-	uint16_t SizeOfBuffer = sizeof(Buffer)/sizeof(Buffer[0]);
-	for(index = 0; index<= sizeof SizeOfBuffer; index++)
+	for(index = 0; index<= SizeOfBuffer; index++)
 	{
 		Buffer[index] = 0;
 	}
@@ -307,18 +302,16 @@ void ResetDMA(void)
 }
 void TriggerMeasure()
 {
-	GPIO_SetBits(TriggerMeasurePort, TriggerMeasurePin);
+	GPIO_ResetBits(TriggerMeasurePort, TriggerMeasurePin); // Close the analog switch
 	ADC_SoftwareStartConv(ADC1);
 	State = MeasureStarted;
-	Delay_ms(1);
-	GPIO_ResetBits(TriggerMeasurePort, TriggerMeasurePin);
 }
 
 void CheckAndDisableInterrupts(void) { GlobalInterruptsDisabled = __get_PRIMASK();__disable_irq(); }
 void CheckAndEnableInterrupts(void) { if(!GlobalInterruptsDisabled) __enable_irq(); }
-void ResetMeasure() { ResetADC1(); ResetDMA(); ClearBuffer(&ADCDataBuffer);}
+void ResetMeasure() { ResetADC1(); ResetDMA();}
 void SendDataToPC() { State = SendingStarted; USARTState = SendBufferStart; SendBufferUSART(ADCDataBuffer);
-					  ClearBuffer(ADCDataBuffer); }
+													ClearBuffer(ADCDataBuffer, SIZEARRAY(ADCDataBuffer));}
 int main(void)
 {
 //	CheckAndDisableInterrupts();
@@ -358,6 +351,7 @@ void TIM3_IRQHandler (void)
 {
 	if(TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)  // If counter update event had occurred
 	{
+		GPIO_SetBits(TriggerMeasurePort, TriggerMeasurePin); // Open the analog switch
 		StopADCMeasure();
 		GPIO_SetBits(GPIOA, GPIO_Pin_8);				// For Debugging
 		TIM_ClearFlag(TIM3, TIM_FLAG_Update);			// Clear the TIM3 Update event flag
