@@ -30,7 +30,6 @@ void AnalogIn(GPIO_TypeDef* PORT, uint16_t PIN);
 void DigitalOut(GPIO_TypeDef* PORT, uint16_t PIN, GPIOOType_TypeDef PushOrDrain,
 										GPIOPuPd_TypeDef PULL, GPIOSpeed_TypeDef SPEED);
 void DigitalIn(GPIO_TypeDef* PORT, uint16_t PIN, GPIOPuPd_TypeDef PULL);
-
 void AltFunc1(GPIO_TypeDef* PORT, uint16_t PIN, uint8_t FUNCTION);
 void AltFunc2(GPIO_TypeDef* PORT, uint16_t PIN, uint8_t FUNCTION, GPIOOType_TypeDef PushOrDrain,
 										GPIOPuPd_TypeDef PULL, GPIOSpeed_TypeDef SPEED);
