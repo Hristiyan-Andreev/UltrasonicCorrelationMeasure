@@ -19,7 +19,9 @@
 #define MeasureTime 5000					// Measure time in us
 
 #define TriggerMeasurePin GPIO_Pin_10
+#define TIM3Trig GPIO_Pin_6
 #define TriggerMeasurePort GPIOA
+
 char SendStartChar = 'S';
 char SendEndChar = 'E';
 //********************************* Define Macros ********************************************
@@ -98,18 +100,7 @@ void initADC1(void)
 }
 void initUSART(void)
 {
-	GPIO_InitTypeDef GPIOSetup;
 	USART_InitTypeDef USARTSetup;
-/*// ************** Configure USART2 Tx (PA.02) and USART Rx (PA.3) as alternate function push-pull ****
-	GPIOSetup.GPIO_Pin = GPIO_Pin_2;
-	GPIOSetup.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIOSetup.GPIO_Mode = GPIO_Mode_AF;
-	GPIOSetup.GPIO_OType = GPIO_OType_OD;
-	GPIOSetup.GPIO_PuPd = GPIO_PuPd_UP;
-	GPIO_Init(GPIOA, &GPIOSetup);
-
-// ***************************** Map USART2 to PA.2 and PA.3 ******************************
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2);*/
 
 	AltFunc1(GPIOA, GPIO_Pin_2, GPIO_AF_USART2);
 
@@ -153,7 +144,7 @@ void initTimers(void)
 	InputCaptureSetup.TIM_ICSelection = TIM_ICSelection_DirectTI;
 	TIM_ICInit(TIM3, &InputCaptureSetup);
 
-	AltFunc2(GPIOA, GPIO_Pin_6, GPIO_AF_TIM3, OutputPP, PullUp, HighSpeed);
+	AltFunc2(GPIOA, TIM3Trig, GPIO_AF_TIM3, OutputPP, PullUp, HighSpeed);
 // *************************** Set up timer triggering *********************************
 	TIM_UpdateRequestConfig(TIM3, TIM_UpdateSource_Regular); // Only underflow/overflow can generate update interrupt
 	TIM_SelectOutputTrigger(TIM3, TIM_TRGOSource_Update); // TRGO event only from update event
