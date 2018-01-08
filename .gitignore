@@ -1,1 +1,10 @@
+# Debug stuff
 /Debug/
+
+# make and build files
+*.lst
+*.o
+*.eep
+*.lss
+*.map
+*.sym
