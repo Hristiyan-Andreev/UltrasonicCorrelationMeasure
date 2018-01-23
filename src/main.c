@@ -19,7 +19,9 @@
 #define MeasureTime 5000					// Measure time in us
 
 #define TriggerMeasurePin GPIO_Pin_10
+#define TIM3Trig GPIO_Pin_6
 #define TriggerMeasurePort GPIOA
+
 char SendStartChar = 'S';
 char SendEndChar = 'E';
 //********************************* Define Macros ********************************************
@@ -99,16 +101,6 @@ void initADC1(void)
 void initUSART(void)
 {
 	USART_InitTypeDef USARTSetup;
-/*// ************** Configure USART2 Tx (PA.02) and USART Rx (PA.3) as alternate function push-pull ****
-	GPIOSetup.GPIO_Pin = GPIO_Pin_2;
-	GPIOSetup.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIOSetup.GPIO_Mode = GPIO_Mode_AF;
-	GPIOSetup.GPIO_OType = GPIO_OType_OD;
-	GPIOSetup.GPIO_PuPd = GPIO_PuPd_UP;
-	GPIO_Init(GPIOA, &GPIOSetup);
-
-// ***************************** Map USART2 to PA.2 and PA.3 ******************************
-	GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2);*/
 
 	AltFunc1(GPIOA, GPIO_Pin_2, GPIO_AF_USART2);
 
@@ -152,7 +144,7 @@ void initTimers(void)
 	InputCaptureSetup.TIM_ICSelection = TIM_ICSelection_DirectTI;
 	TIM_ICInit(TIM3, &InputCaptureSetup);
 
-	AltFunc2(GPIOA, GPIO_Pin_6, GPIO_AF_TIM3, OutputPP, PullUp, HighSpeed);
+	AltFunc2(GPIOA, TIM3Trig, GPIO_AF_TIM3, OutputPP, PullUp, HighSpeed);
 // *************************** Set up timer triggering *********************************
 	TIM_UpdateRequestConfig(TIM3, TIM_UpdateSource_Regular); // Only underflow/overflow can generate update interrupt
 	TIM_SelectOutputTrigger(TIM3, TIM_TRGOSource_Update); // TRGO event only from update event
@@ -169,8 +161,6 @@ void initTimers(void)
 	TimeBaseSetup.TIM_CounterMode = TIM_CounterMode_Down; // Counting up
 	TimeBaseSetup.TIM_Period = MeasureTime;		// 10 000 us = 10ms measuring time
 	TIM_TimeBaseInit(TIM3, &TimeBaseSetup);
-
-
 
 // Configure interrupt on reaching target cycles
 	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
@@ -279,7 +269,6 @@ void StopADCMeasure(void)
 {
 	ADC_Cmd(ADC1, DISABLE);						// Disable the ADC1
 	ADC1->CR2 &= (uint32_t)(~ADC_CR2_SWSTART);
-	State = MeasureEnded;
 }
 
 void ResetADC1(void)
@@ -303,7 +292,6 @@ void TriggerMeasure()
 {
 	GPIO_ResetBits(TriggerMeasurePort, TriggerMeasurePin); // Close the analog switch
 	ADC_SoftwareStartConv(ADC1);
-	State = MeasureStarted;
 }
 
 void CheckAndDisableInterrupts(void) { GlobalInterruptsDisabled = __get_PRIMASK();__disable_irq(); }
@@ -324,6 +312,7 @@ int main(void)
 		State = ReadyToMeasure;
 		while(GPIO_ReadInputDataBit(USER_BUTTON_GPIO_PORT, USER_BUTTON_PIN) == Bit_SET );
 		TriggerMeasure();
+		State = MeasureStarted;
 		Delay_ms(50); // while(State != MeasureEnded)
 		if (State == MeasureEnded)
 		{
@@ -352,6 +341,7 @@ void TIM3_IRQHandler (void)
 	{
 		GPIO_SetBits(TriggerMeasurePort, TriggerMeasurePin); // Open the analog switch
 		StopADCMeasure();
+		State = MeasureEnded;
 		GPIO_SetBits(GPIOA, GPIO_Pin_8);				// For Debugging
 		TIM_ClearFlag(TIM3, TIM_FLAG_Update);			// Clear the TIM3 Update event flag
 		TIM_ClearITPendingBit(TIM3,TIM_IT_Update);		// Clear the TIM3 Update event IT flag -> same as top
