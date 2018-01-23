@@ -98,7 +98,6 @@ void initADC1(void)
 }
 void initUSART(void)
 {
-	GPIO_InitTypeDef GPIOSetup;
 	USART_InitTypeDef USARTSetup;
 /*// ************** Configure USART2 Tx (PA.02) and USART Rx (PA.3) as alternate function push-pull ****
 	GPIOSetup.GPIO_Pin = GPIO_Pin_2;
