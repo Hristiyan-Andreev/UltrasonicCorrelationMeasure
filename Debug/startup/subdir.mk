@@ -15,7 +15,7 @@ startup/%.o: ../startup/%.s
 	@echo 'Building file: $<'
 	@echo 'Invoking: MCU GCC Assembler'
 	@echo $(PWD)
-	arm-none-eabi-as -mcpu=cortex-m3 -mthumb -mfloat-abi=soft -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib" -I"D:/Docs and stuff/Project Avalanche/Workspace4/UltrasonicCorrelationMeasure/inc" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/CMSIS/core" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/CMSIS/device" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/StdPeriph_Driver/inc" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/Utilities" -g -o "$@" "$<"
+	arm-none-eabi-as -mcpu=cortex-m3 -mthumb -mfloat-abi=soft -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib" -I"D:/Docs and stuff/STM32 Mats/Workspace1/UltrasonicCorrelationMeasure/inc" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/CMSIS/core" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/CMSIS/device" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/StdPeriph_Driver/inc" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/Utilities" -g -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

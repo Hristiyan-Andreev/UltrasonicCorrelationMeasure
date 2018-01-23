@@ -27,7 +27,7 @@ src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: MCU GCC Compiler'
 	@echo $(PWD)
-	arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -mfloat-abi=soft -DSTM32L1 -DSTM32L152RETx -DNUCLEO_L152RE -DSTM32 -DDEBUG -DUSE_STDPERIPH_DRIVER -DSTM32L1XX_XL -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib" -I"D:/Docs and stuff/Project Avalanche/Workspace4/UltrasonicCorrelationMeasure/inc" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/CMSIS/core" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/CMSIS/device" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/StdPeriph_Driver/inc" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/Utilities" -O0 -g3 -Wall -fmessage-length=0 -ffunction-sections -c -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -mfloat-abi=soft -DSTM32L1 -DSTM32L152RETx -DNUCLEO_L152RE -DSTM32 -DDEBUG -DUSE_STDPERIPH_DRIVER -DSTM32L1XX_XL -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib" -I"D:/Docs and stuff/STM32 Mats/Workspace1/UltrasonicCorrelationMeasure/inc" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/CMSIS/core" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/CMSIS/device" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/StdPeriph_Driver/inc" -I"D:/Docs and stuff/STM32 Mats/Workspace1/nucleo-l152re_stdperiph_lib/Utilities" -O0 -g3 -Wall -fmessage-length=0 -ffunction-sections -c -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

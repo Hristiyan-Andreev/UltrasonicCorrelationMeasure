@@ -30,10 +30,10 @@ endif
 all: UltrasonicCorrelationMeasure.elf
 
 # Tool invocations
-UltrasonicCorrelationMeasure.elf: $(OBJS) $(USER_OBJS) D:\Docs\ and\ stuff\Project\ Avalanche\Workspace4\UltrasonicCorrelationMeasure\LinkerScript.ld
+UltrasonicCorrelationMeasure.elf: $(OBJS) $(USER_OBJS) D:\Docs\ and\ stuff\STM32\ Mats\Workspace1\UltrasonicCorrelationMeasure\LinkerScript.ld
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU GCC Linker'
-	arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -mfloat-abi=soft -L"D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug" -T"D:\Docs and stuff\Project Avalanche\Workspace4\UltrasonicCorrelationMeasure\LinkerScript.ld" -Wl,-Map=output.map -Wl,--gc-sections -o "UltrasonicCorrelationMeasure.elf" @"objects.list" $(USER_OBJS) $(LIBS) -lm
+	arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -mfloat-abi=soft -L"D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug" -T"D:\Docs and stuff\STM32 Mats\Workspace1\UltrasonicCorrelationMeasure\LinkerScript.ld" -Wl,-Map=output.map -Wl,--gc-sections -o "UltrasonicCorrelationMeasure.elf" @"objects.list" $(USER_OBJS) $(LIBS) -lm
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build

@@ -2048,42 +2048,42 @@ OUTPUT(UltrasonicCorrelationMeasure.elf elf32-littlearm)
  .debug_macro   0x0000f457      0x1c9 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
  .debug_macro   0x0000f620      0x21a D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
 
-.debug_line     0x00000000     0x5df2
- .debug_line    0x00000000      0x6f9 src/hGPIO_LIB.o
- .debug_line    0x000006f9      0x9ab src/main.o
- .debug_line    0x000010a4      0x6ac src/system_stm32l1xx.o
- .debug_line    0x00001750       0x7e startup/startup_stm32l1xx_xl.o
- .debug_line    0x000017ce      0x68f D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
- .debug_line    0x00001e5d      0x9d6 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_adc.o)
- .debug_line    0x00002833      0x68c D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dbgmcu.o)
- .debug_line    0x00002ebf      0x77b D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dma.o)
- .debug_line    0x0000363a      0x7a8 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_gpio.o)
- .debug_line    0x00003de2      0x965 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_rcc.o)
- .debug_line    0x00004747      0xdcd D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_tim.o)
- .debug_line    0x00005514      0x8de D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
+.debug_line     0x00000000     0x5deb
+ .debug_line    0x00000000      0x6f2 src/hGPIO_LIB.o
+ .debug_line    0x000006f2      0x9ab src/main.o
+ .debug_line    0x0000109d      0x6ac src/system_stm32l1xx.o
+ .debug_line    0x00001749       0x7e startup/startup_stm32l1xx_xl.o
+ .debug_line    0x000017c7      0x68f D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
+ .debug_line    0x00001e56      0x9d6 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_adc.o)
+ .debug_line    0x0000282c      0x68c D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dbgmcu.o)
+ .debug_line    0x00002eb8      0x77b D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dma.o)
+ .debug_line    0x00003633      0x7a8 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_gpio.o)
+ .debug_line    0x00003ddb      0x965 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_rcc.o)
+ .debug_line    0x00004740      0xdcd D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_tim.o)
+ .debug_line    0x0000550d      0x8de D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
 
-.debug_str      0x00000000    0x552f1
- .debug_str     0x00000000    0x51692 src/hGPIO_LIB.o
-                              0x518b8 (size before relaxing)
- .debug_str     0x00051692     0x1241 src/main.o
+.debug_str      0x00000000    0x5533c
+ .debug_str     0x00000000    0x5168b src/hGPIO_LIB.o
+                              0x518b1 (size before relaxing)
+ .debug_str     0x0005168b     0x1293 src/main.o
                               0x529fa (size before relaxing)
- .debug_str     0x000528d3      0x177 src/system_stm32l1xx.o
+ .debug_str     0x0005291e      0x177 src/system_stm32l1xx.o
                               0x5178b (size before relaxing)
- .debug_str     0x00052a4a      0x168 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
+ .debug_str     0x00052a95      0x168 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(misc.o)
                               0x517f7 (size before relaxing)
- .debug_str     0x00052bb2      0x841 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_adc.o)
+ .debug_str     0x00052bfd      0x841 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_adc.o)
                               0x51f43 (size before relaxing)
- .debug_str     0x000533f3       0xe4 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dbgmcu.o)
+ .debug_str     0x0005343e       0xe4 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dbgmcu.o)
                               0x51668 (size before relaxing)
- .debug_str     0x000534d7      0x5f9 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dma.o)
+ .debug_str     0x00053522      0x5f9 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_dma.o)
                               0x51c99 (size before relaxing)
- .debug_str     0x00053ad0      0x170 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_gpio.o)
+ .debug_str     0x00053b1b      0x170 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_gpio.o)
                               0x518d1 (size before relaxing)
- .debug_str     0x00053c40      0x8f8 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_rcc.o)
+ .debug_str     0x00053c8b      0x8f8 D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_rcc.o)
                               0x51fa7 (size before relaxing)
- .debug_str     0x00054538      0x90c D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_tim.o)
+ .debug_str     0x00054583      0x90c D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_tim.o)
                               0x520a4 (size before relaxing)
- .debug_str     0x00054e44      0x4ad D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
+ .debug_str     0x00054e8f      0x4ad D:\Docs and stuff\STM32 Mats\Workspace1\nucleo-l152re_stdperiph_lib\Debug\libnucleo-l152re_stdperiph_lib.a(stm32l1xx_usart.o)
                               0x51bb2 (size before relaxing)
 
 .comment        0x00000000       0x6e

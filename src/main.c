@@ -162,8 +162,6 @@ void initTimers(void)
 	TimeBaseSetup.TIM_Period = MeasureTime;		// 10 000 us = 10ms measuring time
 	TIM_TimeBaseInit(TIM3, &TimeBaseSetup);
 
-
-
 // Configure interrupt on reaching target cycles
 	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
 }
@@ -271,7 +269,6 @@ void StopADCMeasure(void)
 {
 	ADC_Cmd(ADC1, DISABLE);						// Disable the ADC1
 	ADC1->CR2 &= (uint32_t)(~ADC_CR2_SWSTART);
-	State = MeasureEnded;
 }
 
 void ResetADC1(void)
@@ -295,7 +292,6 @@ void TriggerMeasure()
 {
 	GPIO_ResetBits(TriggerMeasurePort, TriggerMeasurePin); // Close the analog switch
 	ADC_SoftwareStartConv(ADC1);
-	State = MeasureStarted;
 }
 
 void CheckAndDisableInterrupts(void) { GlobalInterruptsDisabled = __get_PRIMASK();__disable_irq(); }
@@ -316,6 +312,7 @@ int main(void)
 		State = ReadyToMeasure;
 		while(GPIO_ReadInputDataBit(USER_BUTTON_GPIO_PORT, USER_BUTTON_PIN) == Bit_SET );
 		TriggerMeasure();
+		State = MeasureStarted;
 		Delay_ms(50); // while(State != MeasureEnded)
 		if (State == MeasureEnded)
 		{
@@ -344,6 +341,7 @@ void TIM3_IRQHandler (void)
 	{
 		GPIO_SetBits(TriggerMeasurePort, TriggerMeasurePin); // Open the analog switch
 		StopADCMeasure();
+		State = MeasureEnded;
 		GPIO_SetBits(GPIOA, GPIO_Pin_8);				// For Debugging
 		TIM_ClearFlag(TIM3, TIM_FLAG_Update);			// Clear the TIM3 Update event flag
 		TIM_ClearITPendingBit(TIM3,TIM_IT_Update);		// Clear the TIM3 Update event IT flag -> same as top
